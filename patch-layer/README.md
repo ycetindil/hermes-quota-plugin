@@ -70,7 +70,7 @@ From a checkout of this branch (or any copy of `apply.sh`):
   /srv/ai-control/runtime/plugins/quota/desktop/plugin.js
 
 # 2–6 — container profile installs (inside ai-control-agent-runtime-1)
-docker exec ai-control-agent-runtime-1 sh -s -- \
+docker exec ai-control-agent-runtime-1 bash -s -- \
   --backup-dir /opt/data/quota-publish-layer-backups \
   /opt/data/profiles/agora-leader/plugins/quota/desktop/plugin.js \
   /opt/data/profiles/agora-researcher/plugins/quota/desktop/plugin.js \
@@ -80,11 +80,13 @@ docker exec ai-control-agent-runtime-1 sh -s -- \
   < apply.sh
 
 # 7 — Framework install #7
-ssh framework 'sh -s -- --backup-dir ~/.hermes/quota-publish-layer-backups \
+ssh framework 'bash -s -- --backup-dir ~/.hermes/quota-publish-layer-backups \
   ~/.hermes/desktop-plugins/quota/plugin.js' < apply.sh
 ```
 
-After every plugin update, re-run the three commands. Expected output is
+After every plugin update, re-run the three commands.
+(`bash -s`, not `sh -s`: the container's `sh` is dash, which rejects
+the script's arrays — found first-hand at first application.) Expected output is
 `PATCHED` for a fresh install (or `SKIP` when the install already carries
 the call); any `FAILED` line means that install was left untouched — do
 not proceed past it, read the reason, and fix the anchor (usually the
